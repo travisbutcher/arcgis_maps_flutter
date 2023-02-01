@@ -16,14 +16,20 @@ import androidx.lifecycle.LifecycleOwner;
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.arcgisservices.TimeAware;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.data.Feature;
+import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.layers.GroupLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.LayerList;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -43,6 +49,7 @@ import com.valentingrigorean.arcgis_maps_flutter.layers.MapChangeAware;
 import com.valentingrigorean.arcgis_maps_flutter.utils.AGSLoadObjects;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -347,6 +354,112 @@ final class ArcgisMapController implements DefaultLifecycleObserver, PlatformVie
             break;
             case "map#getWanderExtentFactor": {
                 result.success(mapView.getLocationDisplay().getWanderExtentFactor());
+            }
+            break;
+            case "map#queryFeatureTableFromLayer": {
+
+                final Map<String, String> data = call.arguments();
+
+                if (mapView != null && data != null) {
+
+                    QueryParameters params = new QueryParameters();
+                    String layerName = "";
+
+                    // init query params
+                    for (Map.Entry<String, String> entry : data.entrySet()) {
+                        System.out.println(entry.getKey() + "/" + entry.getValue());
+
+                        switch (entry.getKey()) {
+                            case "layerName":
+                                layerName = (String)entry.getValue();
+                                break;
+                            case "objectId":
+                                params.getObjectIds().add(Long.parseLong(entry.getValue()));
+                                break;
+                            default:
+                                if (params.getWhereClause().isEmpty()) {
+                                    params.setWhereClause("");
+                                } else {
+                                    String whereClause = params.getWhereClause();
+                                    params.setWhereClause(whereClause.concat(" "));
+                                }
+                                break;
+                        }
+                    }
+
+                    // check map
+                    final ArcGISMap map = mapView.getMap();
+
+                    if (map == null || map.getOperationalLayers().size() == 0) {
+                        result.success(null);
+                        return;
+                    }
+
+                    final LayerList layers = map.getOperationalLayers();
+
+                    String finalLayerName = layerName;
+                    AGSLoadObjects.load(layers, (loaded -> {
+
+                        if (!loaded) {
+                            result.success(null);
+                            return;
+                        }
+
+                        for (final Layer layer : layers) {
+                            if (layer instanceof FeatureLayer) {
+                                FeatureLayer featureLayer = (FeatureLayer) layer;
+                                if (featureLayer.getName().equalsIgnoreCase(finalLayerName)){
+
+                                    final ListenableFuture<FeatureQueryResult> future =
+                                            featureLayer.getFeatureTable().queryFeaturesAsync(params);
+
+                                    future.addDoneListener(() -> {
+                                        try {
+                                            FeatureQueryResult queryResult = future.get();
+                                            // return first found feature
+                                            if (queryResult.iterator().hasNext()){
+                                                final Feature feature = queryResult.iterator().next();
+                                                result.success(Convert.geoElementToJson(feature));
+                                            }
+                                        } catch (Exception e) {
+                                            result.success(null);
+                                        }
+                                    });
+                                }
+                            } else if (layer instanceof GroupLayer) {
+                                GroupLayer gLayer = (GroupLayer) layer;
+                                for (final Layer layerItem: gLayer.getLayers()){
+                                    if (layerItem instanceof FeatureLayer) {
+                                        FeatureLayer featureLayer = (FeatureLayer) layerItem;
+
+                                        if (featureLayer.getName().equalsIgnoreCase(finalLayerName)){
+
+                                            final ListenableFuture<FeatureQueryResult> future =
+                                                    featureLayer.getFeatureTable().queryFeaturesAsync(params);
+
+                                            future.addDoneListener(() -> {
+                                                try {
+                                                    FeatureQueryResult queryResult = future.get();
+                                                    // return first found feature
+                                                    if (queryResult.iterator().hasNext()){
+                                                        final Feature feature = queryResult.iterator().next();
+                                                        final Object resultValue = Convert.geoElementToJson(feature);
+                                                        result.success(resultValue);
+                                                    }
+                                                } catch (Exception e) {
+                                                    result.success(null);
+                                                }
+                                            });
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }));
+                } else {
+                    result.success(null);
+                }
             }
             break;
             case "map#getTimeAwareLayerInfos":

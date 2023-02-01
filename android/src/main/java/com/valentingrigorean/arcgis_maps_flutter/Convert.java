@@ -317,6 +317,21 @@ public class Convert {
         return null;
     }
 
+    @Nullable
+    public static Object geoElementToJson(GeoElement element) {
+
+        final Map<String, Object> attributes = new HashMap<>(element.getAttributes().size());
+        element.getAttributes().forEach((k, v) -> attributes.put(k, toFlutterFieldType(v)));
+
+        final Map<String, Object> elementData = new HashMap<>(2);
+
+        elementData.put("attributes", attributes);
+        if (element.getGeometry() != null)
+            elementData.put("geometry", geometryToJson(element.getGeometry()));
+
+        return elementData;
+    }
+
     public static Point toPoint(Object o) {
         final Map<?, ?> data = toMap(o);
         final double x = toDouble(Objects.requireNonNull(data).get("x"));

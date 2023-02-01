@@ -228,6 +228,18 @@ class MethodChannelArcgisMapsFlutter extends ArcgisMapsFlutterPlatform {
   }
 
   @override
+  Future<GeoElement?> queryFeatureTableFromLayer(int mapId, String layerName, Map<String, dynamic> queryValues) async {
+
+    queryValues["layerName"] = layerName;
+
+    final result = await channel(mapId).invokeMapMethod<String, dynamic>(
+      'map#queryFeatureTableFromLayer',
+      queryValues,
+    );
+    return result == null ? null : GeoElement.fromJson(result);
+  }
+
+  @override
   Future<List<TimeAwareLayerInfo>> getTimeAwareLayerInfos(int mapId) async {
     final result =
         await channel(mapId).invokeListMethod('map#getTimeAwareLayerInfos');

@@ -93,6 +93,11 @@ abstract class ArcgisMapsFlutterPlatform extends PlatformInterface {
         'getWanderExtentFactor() has not been implemented.');
   }
 
+  Future<GeoElement?> queryFeatureTableFromLayer(int mapId, String layerName, Map<String, dynamic> queryValues) {
+    throw UnimplementedError(
+        'selectFeatureById() has not been implemented.');
+  }
+
   Future<List<TimeAwareLayerInfo>> getTimeAwareLayerInfos(int mapId) {
     throw UnimplementedError(
         'getTimeAwareLayerInfos() has not been implemented.');

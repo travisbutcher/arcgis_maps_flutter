@@ -247,6 +247,104 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
         case "map#getWanderExtentFactor":
             result(mapView.locationDisplay.wanderExtentFactor)
             break
+        case "map#queryFeatureTableFromLayer":
+            
+            if let data = call.arguments as? Dictionary<String, String> {
+
+                var queryLayerName = ""
+                let queryParams = AGSQueryParameters()
+                
+                for (key, value) in data {
+                    switch (key) {
+                        case "layerName":
+                            queryLayerName = value
+                            break
+                        case "objectId":
+                            queryParams.objectIDs.append(NSNumber(value: UInt64(value) ?? 0))
+                            break
+                        default:
+                            if (queryParams.whereClause.isEmpty) {
+                                queryParams.whereClause = "upper(\(key)) LIKE '%\(value.uppercased())%'"
+                            } else {
+                                queryParams.whereClause.append(" AND upper(\(key)) LIKE '%\(value.uppercased())%'")
+                            }
+                            break
+                    }
+                }
+
+                if queryLayerName.isEmpty {
+                    result(nil)
+                    return
+                }
+                
+                guard let operationalLayers = mapView.map?.operationalLayers as AnyObject as? [AGSLayer],  operationalLayers.count > 0 else {
+                    result(nil)
+                    return
+                }
+                
+                AGSLoadObjects(operationalLayers) { [weak self] (loaded) in
+                    
+                    guard loaded else {
+                        result(nil)
+                        return
+                    }
+                    
+                    guard self != nil else {
+                        result(nil)
+                        return
+                    }
+
+                    operationalLayers.forEach { (opLayer) in
+                        
+                        // check if feature layer
+                        if let featLayer = opLayer as? AGSFeatureLayer {
+                            if (queryLayerName.uppercased() == featLayer.name.uppercased()) {
+                                featLayer.featureTable?.queryFeatures(with: queryParams, completion: { (qResult:AGSFeatureQueryResult?, error:Error?) -> Void in
+                                    if let _ = error {
+                                        print("Error searching for feature")
+                                    }
+                                    else if let features = qResult?.featureEnumerator().allObjects {
+                                        if features.count > 0 {
+                                            let feature = features[0]
+                                            result(feature.toJSONFlutter() as! [String : Any])
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                        
+                        // check group layers
+                        guard let groupLayer = opLayer as? AGSGroupLayer else {
+                            return
+                        }
+                        
+                        for layer in groupLayer.layers {
+                            
+                            guard let featureLayer = layer as? AGSFeatureLayer else {
+                                return
+                            }
+                            
+                            if (queryLayerName.uppercased() == featureLayer.name.uppercased()) {
+                                
+                                featureLayer.featureTable?.queryFeatures(with: queryParams, completion: { (qResult:AGSFeatureQueryResult?, error:Error?) -> Void in
+                                    if let _ = error {
+                                        print("Error searching for feature")
+                                    }
+                                    else if let features = qResult?.featureEnumerator().allObjects {
+                                        if features.count > 0 {
+                                            let feature = features[0]
+                                            result(feature.toJSONFlutter() as! [String : Any])
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    }
+                }
+            } else {
+                result(nil)
+            }
+            break
         case "map#getTimeAwareLayerInfos":
             handleTimeAwareLayerInfos(result: result)
             break
@@ -776,6 +874,5 @@ extension ArcgisMapController: AGSGeoViewTouchDelegate {
     private func sendUserLocationTap() {
         channel.invokeMethod("map#onUserLocationTap", arguments: nil)
     }
+    
 }
-
-
