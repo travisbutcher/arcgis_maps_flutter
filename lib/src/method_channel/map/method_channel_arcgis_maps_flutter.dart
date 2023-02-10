@@ -228,15 +228,42 @@ class MethodChannelArcgisMapsFlutter extends ArcgisMapsFlutterPlatform {
   }
 
   @override
-  Future<GeoElement?> queryFeatureTableFromLayer(int mapId, String layerName, Map<String, dynamic> queryValues) async {
+  Future<List<GeoElement>> queryFeatureTableFromLayer(
+      {
+        required int mapId,
+        required String layerName,
+        Geometry? geometry,
+        SpatialRelationship? spatialRelationship,
+        int? maxResults,
+        Map<String, dynamic>? queryValues,
+      }) async {
+
+    queryValues ??= {};
 
     queryValues["layerName"] = layerName;
 
-    final result = await channel(mapId).invokeMapMethod<String, dynamic>(
+    if (geometry != null) {
+      queryValues["geometry"] = geometry.toJson();
+    }
+
+    if (spatialRelationship != null) {
+      queryValues["spatialRelationship"] = spatialRelationship.value;
+    }
+
+    if (maxResults != null) {
+      queryValues["maxResults"] = maxResults.toString();
+    }
+
+    final result = await channel(mapId).invokeListMethod(
       'map#queryFeatureTableFromLayer',
       queryValues,
     );
-    return result == null ? null : GeoElement.fromJson(result);
+
+    return result
+        ?.map<GeoElement>((e) => GeoElement.fromJson(e))
+        .toList() ??
+        const [];
+
   }
 
   @override

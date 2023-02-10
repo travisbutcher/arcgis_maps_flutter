@@ -69,8 +69,21 @@ class ArcgisMapController {
     return layers;
   }
 
-  Future<GeoElement?> queryFeatureTableFromLayer(String layerName, Map<String, dynamic> queryValues) async {
-    return ArcgisMapsFlutterPlatform.instance.queryFeatureTableFromLayer(mapId, layerName, queryValues);
+  Future<List<GeoElement>> queryFeatureTableFromLayer({
+        required String layerName,
+        Geometry? geometry,
+        SpatialRelationship? spatialRelationship,
+        int? maxResults,
+        Map<String, dynamic>? queryValues,
+      }) async {
+    return ArcgisMapsFlutterPlatform.instance.queryFeatureTableFromLayer(
+      mapId: mapId,
+      layerName: layerName,
+      queryValues: queryValues,
+      geometry: geometry,
+      spatialRelationship: spatialRelationship,
+      maxResults: maxResults
+    );
   }
 
   Future<List<LegendInfoResult>> getLegendInfosForLayers(

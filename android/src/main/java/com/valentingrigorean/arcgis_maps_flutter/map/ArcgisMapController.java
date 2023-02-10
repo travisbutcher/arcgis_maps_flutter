@@ -358,7 +358,7 @@ final class ArcgisMapController implements DefaultLifecycleObserver, PlatformVie
             break;
             case "map#queryFeatureTableFromLayer": {
 
-                final Map<String, String> data = call.arguments();
+                final Map<String, ?> data = call.arguments();
 
                 if (mapView != null && data != null) {
 
@@ -366,22 +366,42 @@ final class ArcgisMapController implements DefaultLifecycleObserver, PlatformVie
                     String layerName = "";
 
                     // init query params
-                    for (Map.Entry<String, String> entry : data.entrySet()) {
-                        System.out.println(entry.getKey() + "/" + entry.getValue());
+                    for (Map.Entry<String, ?> entry : data.entrySet()) {
 
                         switch (entry.getKey()) {
                             case "layerName":
-                                layerName = (String)entry.getValue();
+                                layerName = (String) entry.getValue();
                                 break;
                             case "objectId":
-                                params.getObjectIds().add(Long.parseLong(entry.getValue()));
+                                params.getObjectIds().add(Long.parseLong((String) entry.getValue()));
+                                break;
+                            case "maxResults":
+                                params.setMaxFeatures(Integer.parseInt((String) entry.getValue()));
+                                break;
+                            case "geometry":
+                                params.setGeometry(Convert.toGeometry((entry.getValue())));
+                                break;
+                            case "spatialRelationship":
+                                params.setSpatialRelationship(Convert.toSpatialRelationship(entry.getValue()));
                                 break;
                             default:
                                 if (params.getWhereClause().isEmpty()) {
-                                    params.setWhereClause("");
+                                    params.setWhereClause(
+                                            String.format(
+                                                    "upper(%s) LIKE '%%%s%%'",
+                                                    entry.getKey(),
+                                                    entry.getValue().toString().toUpperCase()
+                                            )
+                                    );
                                 } else {
                                     String whereClause = params.getWhereClause();
-                                    params.setWhereClause(whereClause.concat(" "));
+                                    params.setWhereClause(whereClause.concat(
+                                            String.format(
+                                                    " AND upper(%s) LIKE '%%%s%%'",
+                                                    entry.getKey(),
+                                                    entry.getValue().toString().toUpperCase()
+                                            )
+                                    ));
                                 }
                                 break;
                         }
@@ -399,7 +419,6 @@ final class ArcgisMapController implements DefaultLifecycleObserver, PlatformVie
 
                     String finalLayerName = layerName;
                     AGSLoadObjects.load(layers, (loaded -> {
-
                         if (!loaded) {
                             result.success(null);
                             return;
@@ -407,6 +426,7 @@ final class ArcgisMapController implements DefaultLifecycleObserver, PlatformVie
 
                         for (final Layer layer : layers) {
                             if (layer instanceof FeatureLayer) {
+
                                 FeatureLayer featureLayer = (FeatureLayer) layer;
                                 if (featureLayer.getName().equalsIgnoreCase(finalLayerName)){
 
@@ -416,22 +436,25 @@ final class ArcgisMapController implements DefaultLifecycleObserver, PlatformVie
                                     future.addDoneListener(() -> {
                                         try {
                                             FeatureQueryResult queryResult = future.get();
-                                            // return first found feature
-                                            if (queryResult.iterator().hasNext()){
-                                                final Feature feature = queryResult.iterator().next();
-                                                result.success(Convert.geoElementToJson(feature));
+                                            final ArrayList<Object> results = new ArrayList<>();
+                                            for (Feature feature : queryResult) {
+                                                results.add(Convert.geoElementToJson(feature));
                                             }
+                                            result.success(results);
                                         } catch (Exception e) {
                                             result.success(null);
                                         }
                                     });
+                                    return;
                                 }
                             } else if (layer instanceof GroupLayer) {
                                 GroupLayer gLayer = (GroupLayer) layer;
+
                                 for (final Layer layerItem: gLayer.getLayers()){
                                     if (layerItem instanceof FeatureLayer) {
-                                        FeatureLayer featureLayer = (FeatureLayer) layerItem;
 
+                                        FeatureLayer featureLayer = (FeatureLayer) layerItem;
+                                        
                                         if (featureLayer.getName().equalsIgnoreCase(finalLayerName)){
 
                                             final ListenableFuture<FeatureQueryResult> future =
@@ -440,12 +463,12 @@ final class ArcgisMapController implements DefaultLifecycleObserver, PlatformVie
                                             future.addDoneListener(() -> {
                                                 try {
                                                     FeatureQueryResult queryResult = future.get();
-                                                    // return first found feature
-                                                    if (queryResult.iterator().hasNext()){
-                                                        final Feature feature = queryResult.iterator().next();
-                                                        final Object resultValue = Convert.geoElementToJson(feature);
-                                                        result.success(resultValue);
+                                                    final ArrayList<Object> results = new ArrayList<>();
+                                                    for (Feature feature : queryResult) {
+                                                        results.add(Convert.geoElementToJson(feature));
                                                     }
+
+                                                    result.success(results);
                                                 } catch (Exception e) {
                                                     result.success(null);
                                                 }
@@ -456,6 +479,7 @@ final class ArcgisMapController implements DefaultLifecycleObserver, PlatformVie
                                 }
                             }
                         }
+                        result.success(null);
                     }));
                 } else {
                     result.success(null);

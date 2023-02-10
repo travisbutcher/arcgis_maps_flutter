@@ -249,7 +249,7 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
             break
         case "map#queryFeatureTableFromLayer":
             
-            if let data = call.arguments as? Dictionary<String, String> {
+            if let data = call.arguments as? Dictionary<String, Any> {
 
                 var queryLayerName = ""
                 let queryParams = AGSQueryParameters()
@@ -257,16 +257,30 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
                 for (key, value) in data {
                     switch (key) {
                         case "layerName":
-                            queryLayerName = value
+                            queryLayerName = value as! String
                             break
                         case "objectId":
-                            queryParams.objectIDs.append(NSNumber(value: UInt64(value) ?? 0))
+                            if let str = value as? String, let id = Int(str) {
+                                queryParams.objectIDs.append(NSNumber(value: id))
+                            }
+                            break
+                        case "maxResults":
+                            if let str = value as? String, let maxResults = Int(str) {
+                                queryParams.maxFeatures = maxResults
+                            }
+                            break
+                        case "geometry":
+                            let geometry = AGSGeometry.fromFlutter(data: value as! Dictionary<String, Any>)!
+                            queryParams.geometry = geometry
+                            break
+                        case "spatialRelationship":
+                            queryParams.spatialRelationship = AGSSpatialRelationship.fromFlutter(value as! Int)
                             break
                         default:
                             if (queryParams.whereClause.isEmpty) {
-                                queryParams.whereClause = "upper(\(key)) LIKE '%\(value.uppercased())%'"
+                                queryParams.whereClause = "upper(\(key)) LIKE '%\(value as! String).uppercased())%'"
                             } else {
-                                queryParams.whereClause.append(" AND upper(\(key)) LIKE '%\(value.uppercased())%'")
+                                queryParams.whereClause.append(" AND upper(\(key)) LIKE '%\((value as! String).uppercased())%'")
                             }
                             break
                     }
@@ -304,10 +318,9 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
                                         print("Error searching for feature")
                                     }
                                     else if let features = qResult?.featureEnumerator().allObjects {
-                                        if features.count > 0 {
-                                            let feature = features[0]
-                                            result(feature.toJSONFlutter() as! [String : Any])
-                                        }
+                                        result(features.map { (feature) -> Any in
+                                            return feature.toJSONFlutter() as! [String : Any]
+                                        })
                                     }
                                 })
                             }
@@ -331,10 +344,9 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
                                         print("Error searching for feature")
                                     }
                                     else if let features = qResult?.featureEnumerator().allObjects {
-                                        if features.count > 0 {
-                                            let feature = features[0]
-                                            result(feature.toJSONFlutter() as! [String : Any])
-                                        }
+                                        result(features.map { (feature) -> Any in
+                                            return feature.toJSONFlutter() as! [String : Any]
+                                        })
                                     }
                                 })
                             }
