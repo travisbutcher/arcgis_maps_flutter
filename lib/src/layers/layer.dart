@@ -9,7 +9,7 @@ abstract class Layer extends MapsObject<Layer> with EquatableMixin {
   const Layer({
     required this.isVisible,
     required this.opacity,
-    required this.layerId,
+    required this.layerId
   }) : assert(opacity >= 0 && opacity <= 1.0);
 
   @override

@@ -83,6 +83,7 @@ struct FlutterLayer: Hashable, Equatable {
             portalItemLayerId = data["portalItemLayerId"] as? Int
             serviceImageTiledLayerOptions = nil
             groupLayerOptions = nil
+            Renderer = nil
             break
         default:
             serviceImageTiledLayerOptions = nil
@@ -109,6 +110,8 @@ struct FlutterLayer: Hashable, Equatable {
 
     let portalItem: AGSPortalItem?
     let portalItemLayerId: Int?
+
+    let renderer: AGSRenderer?
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(layerId)
@@ -160,6 +163,9 @@ struct FlutterLayer: Hashable, Equatable {
                 featureLayer = AGSFeatureLayer(item: portalItem!, layerID: portalItemLayerId!)
             }
             setupDefaultParams(layer: featureLayer)
+            if let renderer = renderer && renderer != nil {
+                featureLayer.renderer = renderer
+            }
             return featureLayer
         case "TiledLayer":
             let layer: AGSArcGISTiledLayer

@@ -9,6 +9,7 @@ import 'package:arcgis_maps_flutter/src/io/api_key_resource.dart';
 import 'package:arcgis_maps_flutter/src/io/remote_resource.dart';
 import 'package:arcgis_maps_flutter/src/layers/base_tile_layer.dart';
 import 'package:arcgis_maps_flutter/src/layers/layer_updates.dart';
+
 import 'package:arcgis_maps_flutter/src/mapping/basemap_type_options.dart';
 import 'package:arcgis_maps_flutter/src/mapping/view/location_display_impl.dart';
 import 'package:arcgis_maps_flutter/src/maps_object.dart';
@@ -22,6 +23,8 @@ import 'package:arcgis_maps_flutter/src/utils/layers.dart';
 import 'package:arcgis_maps_flutter/src/utils/markers.dart';
 import 'package:arcgis_maps_flutter/src/utils/polygons.dart';
 import 'package:arcgis_maps_flutter/src/utils/polyline.dart';
+import 'package:arcgis_maps_flutter/src/layers/renderer/base_renderer.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -39,6 +42,9 @@ import 'package:http/http.dart' as http;
 import 'package:xml2json/xml2json.dart';
 import 'package:jiffy/jiffy.dart';
 import 'src/method_channel/service_table/method_channel_service_table_flutter.dart';
+
+part 'src/layers/renderer/unique_value_renderer.dart';
+part 'src/layers/renderer/unique_value_info.dart';
 
 part 'src/dispose_scope.dart';
 

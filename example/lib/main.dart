@@ -32,6 +32,7 @@ import 'package:arcgis_maps_flutter_example/map_page_scrolling_list.dart';
 import 'package:arcgis_maps_flutter_example/map_page_tile_cache.dart';
 import 'package:arcgis_maps_flutter_example/map_page_time_slider.dart';
 import 'package:arcgis_maps_flutter_example/map_page_view_insests.dart';
+import 'package:arcgis_maps_flutter_example/map_page_unique_value_renderer.dart';
 import 'package:arcgis_maps_flutter_example/scene_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -178,6 +179,17 @@ class MainPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const MapPageMaxExtent(),
+                    ),
+                  );
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Unique value renderer'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MapUniqueValuePage(),
                     ),
                   );
                 },

@@ -30,12 +30,12 @@ class GeometryEngineController {
                 result(nil)
                 return
             }
-            let spactialReference = AGSSpatialReference(data: data["spatialReference"] as! Dictionary<String, Any>)!
+            let spatialReference = AGSSpatialReference(data: data["spatialReference"] as! Dictionary<String, Any>)!
             guard let geometry = AGSGeometry.fromFlutter(data: data["geometry"] as! Dictionary<String, Any>) else {
                 result(nil)
                 return
             }
-            guard let projectedGeometry = AGSGeometryEngine.projectGeometry(geometry, to: spactialReference) else {
+            guard let projectedGeometry = AGSGeometryEngine.projectGeometry(geometry, to: spatialReference) else {
                 result(nil)
                 return
             }

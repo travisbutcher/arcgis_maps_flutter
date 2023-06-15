@@ -8,6 +8,7 @@ class FeatureLayer extends BaseTileLayer {
     Credential? credential,
     bool isVisible = true,
     double opacity = 1,
+    this.renderer,
   })  : portalItemLayerId = -1,
         super.fromUrl(
           isVisible: isVisible,
@@ -24,6 +25,7 @@ class FeatureLayer extends BaseTileLayer {
     required this.portalItemLayerId,
     bool isVisible = true,
     double opacity = 1,
+    this.renderer,
   }) : super.fromPortalItem(
           isVisible: isVisible,
           opacity: opacity,
@@ -33,6 +35,7 @@ class FeatureLayer extends BaseTileLayer {
         );
 
   final int portalItemLayerId;
+  final BaseRenderer? renderer;
 
   @override
   clone() {
@@ -45,6 +48,10 @@ class FeatureLayer extends BaseTileLayer {
     if (portalItem != null) {
       json['portalItemLayerId'] = portalItemLayerId;
     }
+    if (renderer != null) {
+      json['renderer'] = renderer!.toJson();
+    }
+
     return json;
   }
 
