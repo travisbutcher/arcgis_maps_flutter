@@ -1,14 +1,27 @@
 part of arcgis_maps_flutter;
 
+abstract class Renderer {
+  const Renderer({
+    required this.type,
+  });
+
+  final String type;
+
+  Map<String, Object> toJson() {
+    return {'type': type};
+  }
+}
+
 @immutable
-class UniqueValueRenderer extends BaseRenderer {
-  const UniqueValueRenderer(
-      {required this.fields,
-      required this.fieldDelimiter,
-      required this.defaultSymbol,
-      required this.defaultLabel,
-      required this.uniqueValueInfos,
-      required super.type});
+class UniqueValueRenderer extends Renderer {
+  const UniqueValueRenderer({
+    required this.fields,
+    required this.fieldDelimiter,
+    required this.defaultSymbol,
+    required this.defaultLabel,
+    required this.uniqueValueInfos,
+    required String type,
+  }) : super(type: type);
 
   final List<String> fields;
   final String fieldDelimiter;

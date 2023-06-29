@@ -40,11 +40,24 @@ struct FlutterLayer: Hashable, Equatable {
             url = nil
             portalItem = nil
             self.tileCache = AGSTileCache.createFlutter(data: tileCache)
-        } else {
+        } 
+        else {
             url = nil
             portalItem = nil
             tileCache = nil
+
         }
+
+        renderer = nil
+        //if let rendererData = data["renderer"] as? Dictionary<String, Any> {
+        //    switch data["renderer"]["type"] {
+        //    case "UniqueValueRenderer":
+        //        self.renderer = AGSUniqueValueRenderer(data: rendererData)
+        //        break;
+       //    default:
+        //        self.renderer = nil
+       //    }
+       // } else {renderer = nil}
 
         isVisible = data["isVisible"] as! Bool
         opacity = Float(data["opacity"] as! Double)
@@ -83,7 +96,6 @@ struct FlutterLayer: Hashable, Equatable {
             portalItemLayerId = data["portalItemLayerId"] as? Int
             serviceImageTiledLayerOptions = nil
             groupLayerOptions = nil
-            Renderer = nil
             break
         default:
             serviceImageTiledLayerOptions = nil
@@ -163,7 +175,8 @@ struct FlutterLayer: Hashable, Equatable {
                 featureLayer = AGSFeatureLayer(item: portalItem!, layerID: portalItemLayerId!)
             }
             setupDefaultParams(layer: featureLayer)
-            if let renderer = renderer && renderer != nil {
+
+            if let renderer = renderer {
                 featureLayer.renderer = renderer
             }
             return featureLayer

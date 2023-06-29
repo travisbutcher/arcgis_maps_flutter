@@ -23,7 +23,6 @@ import 'package:arcgis_maps_flutter/src/utils/layers.dart';
 import 'package:arcgis_maps_flutter/src/utils/markers.dart';
 import 'package:arcgis_maps_flutter/src/utils/polygons.dart';
 import 'package:arcgis_maps_flutter/src/utils/polyline.dart';
-import 'package:arcgis_maps_flutter/src/layers/renderer/base_renderer.dart';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';

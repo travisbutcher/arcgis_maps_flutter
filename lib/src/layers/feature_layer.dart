@@ -35,7 +35,7 @@ class FeatureLayer extends BaseTileLayer {
         );
 
   final int portalItemLayerId;
-  final BaseRenderer? renderer;
+  final Renderer? renderer;
 
   @override
   clone() {

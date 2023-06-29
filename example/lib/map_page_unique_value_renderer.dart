@@ -36,12 +36,33 @@ class _MapUniqueValuePageState extends State<MapUniqueValuePage>
   }
 
   Widget _buildMap() {
-    var featureLayer = FeatureLayer.fromUrl(
-        'https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads_Styled/FeatureServer/0');
-    //var uniqueValueRenderer = Uni();
+    var polygonSymbol = Polygon(polygonId: PolygonId('uniqueValueRenderer'));
+    var polygonSymbol2 = Polygon(polygonId: PolygonId('uniqueValueRenderer2'));
+    polygonSymbol2.fillColor.green;
 
-    //uniqueValueRenderer.field1 = 'TRL_NAME';
-    //featureLayer.renderer = uniqueValueRenderer
+    var uniqueValueInfos = [
+      UniqueValueInfo(
+          value: 1,
+          description: "description",
+          symbol: polygonSymbol,
+          label: 'Pacific Crest Trail'),
+      UniqueValueInfo(
+          value: 2,
+          description: "description2",
+          symbol: polygonSymbol2,
+          label: 'Santa Susana Trail'),
+    ];
+    var uniqueValueRenderer = UniqueValueRenderer(
+        fields: const ["UniqueKey"],
+        fieldDelimiter: ',',
+        defaultSymbol: polygonSymbol,
+        defaultLabel: "defaultLabel",
+        uniqueValueInfos: uniqueValueInfos,
+        type: "UniqueValueRenderer");
+
+    var featureLayer = FeatureLayer.fromUrl(
+        'https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/FlutterTest/FeatureServer/0',
+        renderer: uniqueValueRenderer);
 
     var mapView = ArcgisMapView(
       map: map,
@@ -58,8 +79,7 @@ class _MapUniqueValuePageState extends State<MapUniqueValuePage>
         GroupLayer(
           layerId: const LayerId('Group'),
           layers: {
-            FeatureLayer.fromUrl(
-                'https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads_Styled/FeatureServer/0'),
+            featureLayer,
           },
         ),
       },

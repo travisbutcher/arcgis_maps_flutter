@@ -1,6 +1,5 @@
 part of arcgis_maps_flutter;
 
-
 class UniqueValueInfo {
   const UniqueValueInfo({
     required this.value,
@@ -9,12 +8,12 @@ class UniqueValueInfo {
     required this.symbol,
   });
 
-  final String value;
+  final int value;
   final String label;
   final String description;
   final Symbol symbol;
 
-    Object toJson() {
+  Object toJson() {
     return {
       'value': value,
       'label': label,
