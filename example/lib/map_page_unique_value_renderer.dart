@@ -21,53 +21,54 @@ class _MapUniqueValuePageState extends State<MapUniqueValuePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        key: _scaffoldKey,
-        title: const Text("Unique Value Renderer"),
-      ),
-      body: _buildMap(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _mapController?.removeViewpointChangedListener(this);
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+        appBar: AppBar(
+          key: _scaffoldKey,
+          title: const Text("Unique Value Renderer"),
+        ),
+        body: _buildMap());
   }
 
   Widget _buildMap() {
-    var polygonSymbol = Polygon(polygonId: PolygonId('uniqueValueRenderer'));
-    var polygonSymbol2 = Polygon(polygonId: PolygonId('uniqueValueRenderer2'));
-    polygonSymbol2.fillColor.green;
+    var polygonSymbol = const Polygon(
+        polygonId: PolygonId('uniqueValueRenderer'),
+        fillColor: Colors.blue,
+        strokeWidth: 5,
+        strokeColor: Colors.black);
+    var polygonSymbol2 = const Polygon(
+        polygonId: PolygonId('uniqueValueRenderer2'), fillColor: Colors.red);
+    var polygonSymbol3 = const Polygon(
+        polygonId: PolygonId('uniqueValueRenderer3'), fillColor: Colors.brown);
 
     var uniqueValueInfos = [
       UniqueValueInfo(
-          value: 1,
+          values: [1],
           description: "description",
           symbol: polygonSymbol,
-          label: 'Pacific Crest Trail'),
+          label: 'Key 1'),
       UniqueValueInfo(
-          value: 2,
+          values: [2],
           description: "description2",
           symbol: polygonSymbol2,
-          label: 'Santa Susana Trail'),
+          label: 'Key 2'),
+      UniqueValueInfo(
+          values: [3],
+          description: "description3",
+          symbol: polygonSymbol3,
+          label: 'Key 3'),
     ];
     var uniqueValueRenderer = UniqueValueRenderer(
-        fields: const ["UniqueKey"],
-        fieldDelimiter: ',',
-        defaultSymbol: polygonSymbol,
-        defaultLabel: "defaultLabel",
-        uniqueValueInfos: uniqueValueInfos,
+        fieldNames: const ["UniqueKey"],
+        uniqueValues: uniqueValueInfos,
         type: "UniqueValueRenderer");
 
     var featureLayer = FeatureLayer.fromUrl(
-        'https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/FlutterTest/FeatureServer/0',
+        'https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/FlutterHex/FeatureServer/0',
         renderer: uniqueValueRenderer);
 
     var mapView = ArcgisMapView(
       map: map,
       viewpoint: Viewpoint.fromLatLng(
-          latitude: 34.105156, longitude: -118.731316, scale: 120000),
+          latitude: 34.105156, longitude: -118.731316, scale: 360000),
       onMapLoaded: (error) {
         if (error != null) {
           print(error);
@@ -94,37 +95,6 @@ class _MapUniqueValuePageState extends State<MapUniqueValuePage>
 
     return Stack(
       children: [mapView],
-    );
-  }
-
-  // ignore: unused_element
-  Widget _buildMapsTypes(ScrollController scrollController) {
-    var items = BasemapType.values;
-
-    return Container(
-      color: Colors.white,
-      child: ListView.builder(
-        controller: scrollController,
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              items[index].toString(),
-            ),
-            onTap: () {
-              setState(() {
-                map = ArcGISMap.fromBasemapType(
-                  basemapType: items[index],
-                  longitude: 41.3678,
-                  latitude: 28.5588,
-                  levelOfDetail: 10,
-                );
-              });
-              Navigator.pop(_scaffoldKey.currentContext!);
-            },
-          );
-        },
-      ),
     );
   }
 

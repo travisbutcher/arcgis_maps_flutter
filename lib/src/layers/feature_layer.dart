@@ -11,13 +11,12 @@ class FeatureLayer extends BaseTileLayer {
     this.renderer,
   })  : portalItemLayerId = -1,
         super.fromUrl(
-          isVisible: isVisible,
-          opacity: opacity,
-          layerId: layerId ?? LayerId(url),
-          url: url,
-          type: 'FeatureLayer',
-          credential: credential,
-        );
+            isVisible: isVisible,
+            opacity: opacity,
+            layerId: layerId ?? LayerId(url),
+            url: url,
+            type: 'FeatureLayer',
+            credential: credential);
 
   const FeatureLayer.fromPortalItem({
     required LayerId layerId,
@@ -36,7 +35,6 @@ class FeatureLayer extends BaseTileLayer {
 
   final int portalItemLayerId;
   final Renderer? renderer;
-
   @override
   clone() {
     return copyWith();

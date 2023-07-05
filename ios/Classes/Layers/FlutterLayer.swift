@@ -4,6 +4,7 @@
 
 import Foundation
 import ArcGIS
+import os
 
 struct ServiceImageTiledLayerOptions: Hashable, Equatable {
     let tileInfo: AGSTileInfo
@@ -23,7 +24,6 @@ struct GroupLayerOptions: Hashable, Equatable {
 
 
 struct FlutterLayer: Hashable, Equatable {
-
     init(data: Dictionary<String, Any>) {
         layerId = data["layerId"] as! String
         layerType = data["layerType"] as! String
@@ -47,18 +47,7 @@ struct FlutterLayer: Hashable, Equatable {
             tileCache = nil
 
         }
-
-        renderer = nil
-        //if let rendererData = data["renderer"] as? Dictionary<String, Any> {
-        //    switch data["renderer"]["type"] {
-        //    case "UniqueValueRenderer":
-        //        self.renderer = AGSUniqueValueRenderer(data: rendererData)
-        //        break;
-       //    default:
-        //        self.renderer = nil
-       //    }
-       // } else {renderer = nil}
-
+        
         isVisible = data["isVisible"] as! Bool
         opacity = Float(data["opacity"] as! Double)
 
@@ -67,7 +56,7 @@ struct FlutterLayer: Hashable, Equatable {
         } else {
             credential = nil
         }
-
+    
         layersName = data["layersName"] as? [String]
 
         switch (layerType) {
@@ -81,6 +70,7 @@ struct FlutterLayer: Hashable, Equatable {
             )
             groupLayerOptions = nil
             portalItemLayerId = nil
+            renderer = nil
             break
         case "GroupLayer":
             groupLayerOptions = GroupLayerOptions(
@@ -91,16 +81,31 @@ struct FlutterLayer: Hashable, Equatable {
                     })
             serviceImageTiledLayerOptions = nil
             portalItemLayerId = nil
+            renderer = nil
             break
         case "FeatureLayer":
             portalItemLayerId = data["portalItemLayerId"] as? Int
             serviceImageTiledLayerOptions = nil
             groupLayerOptions = nil
+            if let renderer = data["renderer"] as? Dictionary<String, Any> {
+                let extractedExpr: Any? = renderer["type"]
+                switch(extractedExpr as! String){
+                case "UniqueValueRenderer":
+                    self.renderer = AGSUniqueValueRenderer(data: renderer)
+                    break;
+                default:
+                    self.renderer = nil
+                }
+                
+            } else {
+                renderer = nil
+            }
             break
         default:
             serviceImageTiledLayerOptions = nil
             groupLayerOptions = nil
             portalItemLayerId = nil
+            renderer = nil
             break
         }
     }
@@ -175,7 +180,7 @@ struct FlutterLayer: Hashable, Equatable {
                 featureLayer = AGSFeatureLayer(item: portalItem!, layerID: portalItemLayerId!)
             }
             setupDefaultParams(layer: featureLayer)
-
+            
             if let renderer = renderer {
                 featureLayer.renderer = renderer
             }

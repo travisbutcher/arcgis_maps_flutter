@@ -6,11 +6,9 @@ class LayerId extends MapsObjectId<Layer> {
 }
 
 abstract class Layer extends MapsObject<Layer> with EquatableMixin {
-  const Layer({
-    required this.isVisible,
-    required this.opacity,
-    required this.layerId
-  }) : assert(opacity >= 0 && opacity <= 1.0);
+  const Layer(
+      {required this.isVisible, required this.opacity, required this.layerId})
+      : assert(opacity >= 0 && opacity <= 1.0);
 
   @override
   LayerId get mapsId => layerId;
