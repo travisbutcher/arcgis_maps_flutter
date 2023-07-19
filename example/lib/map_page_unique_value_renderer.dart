@@ -33,11 +33,13 @@ class _MapUniqueValuePageState extends State<MapUniqueValuePage>
         polygonId: PolygonId('uniqueValueRenderer'),
         fillColor: Colors.blue,
         strokeWidth: 5,
-        strokeColor: Colors.black);
+        strokeColor: Colors.pink,
+        strokeStyle: SimpleLineSymbolStyle.dash);
     var polygonSymbol2 = const Polygon(
-        polygonId: PolygonId('uniqueValueRenderer2'), fillColor: Colors.red);
+        polygonId: PolygonId('uniqueValueRenderer2'),
+        fillColor: Colors.deepOrange);
     var polygonSymbol3 = const Polygon(
-        polygonId: PolygonId('uniqueValueRenderer3'), fillColor: Colors.brown);
+        polygonId: PolygonId('uniqueValueRenderer3'), fillColor: Colors.yellow);
 
     var uniqueValueInfos = [
       UniqueValueInfo(

@@ -38,26 +38,43 @@ extension AGSUniqueValueRenderer {
     
     private func createSymbol(from symbolData: [String: Any]) -> AGSSymbol? {
         let symbol = AGSSimpleFillSymbol()
-        symbol.outline = AGSLineSymbol()
-        if let strokeWidth = symbolData["strokeWidth"] as? Double {
-            symbol.outline?.width = strokeWidth
-        } else {
-            symbol.outline?.width = 1.0
+        let outline = AGSSimpleLineSymbol()
+        
+        guard let strokeWidth = symbolData["strokeWidth"] as? Int32,
+              let _ = symbolData["strokeWidth"] as? Int32 else {
+            return nil
         }
-
+        outline.width = CGFloat(strokeWidth)
+        
         guard let strokeColor = UIColor(data: symbolData["strokeColor"]),
               let _ = UIColor(data: symbolData["strokeColor"]) else {
             return nil
         }
-        symbol.outline?.color = strokeColor
+        outline.color = strokeColor
 
         guard let fillColor = UIColor(data: symbolData["fillColor"]),
               let _ = UIColor(data: symbolData["fillColor"]) else {
             return nil
         }
         
+        guard let strokeStyle = symbolData["strokeStyle"] as? Int32,
+              let _ = symbolData["strokeStyle"] as? Int32 else {
+            return nil
+        }
+        outline.style = getStrokeStyle(type: String(strokeStyle))
+        
         symbol.color = fillColor
+        symbol.outline = outline
         return symbol
+    }
+    
+    private func getStrokeStyle(type: String) -> AGSSimpleLineSymbolStyle {
+        switch(type){
+        case "dash":
+            return AGSSimpleLineSymbolStyle.dash
+        default:
+            return AGSSimpleLineSymbolStyle.null
+        }
     }
     
     private func createDefaultSymbol(type: String) -> AGSSymbol? {
