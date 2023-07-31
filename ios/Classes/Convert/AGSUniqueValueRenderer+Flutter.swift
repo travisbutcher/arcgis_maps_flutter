@@ -72,6 +72,26 @@ extension AGSUniqueValueRenderer {
         switch(type){
         case "dash":
             return AGSSimpleLineSymbolStyle.dash
+        case "dashDot":
+            return AGSSimpleLineSymbolStyle.dashDot
+        case "dashDotDot":
+            return AGSSimpleLineSymbolStyle.dashDotDot
+        case "dot":
+            return AGSSimpleLineSymbolStyle.dot
+        case "solid":
+            return AGSSimpleLineSymbolStyle.solid
+        case "longDash":
+            return AGSSimpleLineSymbolStyle.longDash
+        case "longDashDot":
+            return AGSSimpleLineSymbolStyle.longDashDot
+        case "shortDash":
+            return AGSSimpleLineSymbolStyle.shortDash
+        case "shortDashDot":
+            return AGSSimpleLineSymbolStyle.shortDashDot
+        case "shortDashDotDot":
+            return AGSSimpleLineSymbolStyle.shortDashDotDot
+        case "shortDot":
+            return AGSSimpleLineSymbolStyle.shortDot
         default:
             return AGSSimpleLineSymbolStyle.null
         }
@@ -83,6 +103,14 @@ extension AGSUniqueValueRenderer {
             let defaultPolySymbol = AGSSimpleFillSymbol()
             defaultPolySymbol.color = UIColor.green
             return defaultPolySymbol
+        case "Line":
+            let defaultLineSymbol = AGSSimpleLineSymbol()
+            defaultLineSymbol.color = UIColor.black
+            return defaultLineSymbol
+        case "Point":
+            let defaultPointSymbol = AGSSimpleMarkerSymbol()
+            defaultPointSymbol.color = UIColor.purple
+            return defaultPointSymbol
         default:
             return nil
         }

@@ -1,5 +1,6 @@
 part of arcgis_maps_flutter;
 
+// Add more styles to this enum?
 enum SimpleLineSymbolStyle { dash, dashDot, dashDotDot, dot, none, solid }
 
 /// Uniquely identifies a [Polyline] among [ArcgisMapView] polylines.

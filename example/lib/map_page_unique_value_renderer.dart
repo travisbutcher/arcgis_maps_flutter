@@ -37,26 +37,56 @@ class _MapUniqueValuePageState extends State<MapUniqueValuePage>
         strokeStyle: SimpleLineSymbolStyle.dash);
     var polygonSymbol2 = const Polygon(
         polygonId: PolygonId('uniqueValueRenderer2'),
-        fillColor: Colors.deepOrange);
+        fillColor: Colors.deepOrange,
+        strokeStyle: SimpleLineSymbolStyle.dashDot);
     var polygonSymbol3 = const Polygon(
-        polygonId: PolygonId('uniqueValueRenderer3'), fillColor: Colors.yellow);
+        polygonId: PolygonId('uniqueValueRenderer3'), fillColor: Colors.yellow, strokeStyle: SimpleLineSymbolStyle.solid);
+
+    //create couple line symbols
+    var lineSymbol1 = const Polyline(
+      polylineId: PolylineId('uniqueValueRendererLine1'),
+      color: Colors.deepOrange,
+      style: SimpleLineSymbolStyle.dash,
+      width: 20
+    );
+    var lineSymbol2 = const Polyline(
+      polylineId: PolylineId('uniqueValueRendererLine2'),
+      color: Colors.red,
+      style: SimpleLineSymbolStyle.dashDot,
+      width: 20);
+    
+    //create couple point symbols
+    // var pointSymbol1 = const Marker(
+    //   markerId: MarkerId('uniqueValueRendererPoint1'), 
+    //   position: AGSPoint(x: x, y: y), 
+    //   icon: icon);
 
     var uniqueValueInfos = [
+      // UniqueValueInfo(
+      //     values: [1],
+      //     description: "description",
+      //     symbol: polygonSymbol,
+      //     label: 'Key 1'),
+      // UniqueValueInfo(
+      //     values: [2],
+      //     description: "description2",
+      //     symbol: polygonSymbol2,
+      //     label: 'Key 2'),
+      // UniqueValueInfo(
+      //     values: [3],
+      //     description: "description3",
+      //     symbol: polygonSymbol3,
+      //     label: 'Key 3'),
       UniqueValueInfo(
-          values: [1],
-          description: "description",
-          symbol: polygonSymbol,
-          label: 'Key 1'),
+        values: [1], 
+        label: 'Key4', 
+        description: 'description4', 
+        symbol: lineSymbol1),
       UniqueValueInfo(
-          values: [2],
-          description: "description2",
-          symbol: polygonSymbol2,
-          label: 'Key 2'),
-      UniqueValueInfo(
-          values: [3],
-          description: "description3",
-          symbol: polygonSymbol3,
-          label: 'Key 3'),
+        values: [2], 
+        label: 'Key5', 
+        description: 'description5', 
+        symbol: lineSymbol2),
     ];
     var uniqueValueRenderer = UniqueValueRenderer(
         fieldNames: const ["UniqueKey"],
@@ -64,7 +94,7 @@ class _MapUniqueValuePageState extends State<MapUniqueValuePage>
         type: "UniqueValueRenderer");
 
     var featureLayer = FeatureLayer.fromUrl(
-        'https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/FlutterHex/FeatureServer/0',
+        "https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/DFW_App_Testing/FeatureServer/1",
         renderer: uniqueValueRenderer);
 
     var mapView = ArcgisMapView(
