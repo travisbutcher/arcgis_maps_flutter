@@ -26,6 +26,7 @@ class Polygon extends Symbol {
     this.onTap,
     this.selectedColor,
     this.visibilityFilter,
+    this.type = "Polygon",
   }) : super(symbolId: polygonId);
 
   /// Uniquely identifies a [Polygon].
@@ -70,6 +71,9 @@ class Polygon extends Symbol {
   final Color? selectedColor;
 
   final SymbolVisibilityFilter? visibilityFilter;
+
+  /// Identifies the type of geometry type for this symbol
+  final String type;
 
   /// Creates a new [Polygon] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.

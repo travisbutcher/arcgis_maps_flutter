@@ -8,7 +8,7 @@ class UniqueValueInfo {
     required this.symbol,
   });
 
-  final List<int> values;
+  final List<dynamic> values;
   final String label;
   final String description;
   final Symbol symbol;

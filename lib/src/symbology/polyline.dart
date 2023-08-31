@@ -1,7 +1,6 @@
 part of arcgis_maps_flutter;
 
-// Add more styles to this enum?
-enum SimpleLineSymbolStyle { dash, dashDot, dashDotDot, dot, none, solid }
+enum SimpleLineSymbolStyle { dash, dashDot, dashDotDot, dot, none, solid, longDash, longDashDot, shortDash, shortDashDot, shortDashDotDot, shortDot }
 
 /// Uniquely identifies a [Polyline] among [ArcgisMapView] polylines.
 ///
@@ -30,6 +29,7 @@ class Polyline extends Symbol {
     this.onTap,
     this.selectedColor,
     this.visibilityFilter,
+    this.type = "Polyline",
   }) : super(symbolId: polylineId);
 
   /// Uniquely identifies a [Polyline].
@@ -74,6 +74,9 @@ class Polyline extends Symbol {
   final Color? selectedColor;
 
   final SymbolVisibilityFilter? visibilityFilter;
+
+  /// Identifies the type of geometry type for this symbol
+  final String type;
 
   /// Creates a new [Polyline] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.
