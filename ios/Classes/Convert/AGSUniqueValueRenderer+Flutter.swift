@@ -5,7 +5,7 @@ extension AGSUniqueValueRenderer {
     convenience init(data: Dictionary<String, Any>) {
         self.init()
         self.fieldNames = data["fieldNames"] as! [String]
-//        No longer doing default symbol if 
+//        No longer doing default symbol if
 //        if let defaultSymbolData = data["defaultSymbol"] as? [String: Any], let symbolType = data["type"] as? String{
 //            self.defaultSymbol = createSymbol(from: defaultSymbolData, type: symbolType)
 //        } else {
@@ -25,8 +25,8 @@ extension AGSUniqueValueRenderer {
                    let symbolData = uniqueValueData["symbol"] as? [String: Any],
                    let values = uniqueValueData["values"] as? [Any] {
                     
-                    let symbolType = symbolData["type"] as! [String]
-                    guard let symbol = createSymbol(from: symbolData, type: symbolType.first!) else { return }
+                    let symbolType = symbolData["type"] as? String
+                    guard let symbol = createSymbol(from: symbolData, type: symbolType!) else { return }
 //                    let symbol = (createSymbol(from: symbolData, type: symbolType) ?? defaultSymbol)!
                     let uniqueValue = AGSUniqueValue.init(description: description, label: label, symbol: symbol, values: values)
                     
@@ -65,7 +65,7 @@ extension AGSUniqueValueRenderer {
                   let _ = symbolData["strokeStyle"] as? Int32 else {
                 return nil
             }
-            outline.style = getStrokeStyle(type: String(strokeStyle))
+            outline.style = getStrokeStyle(type: strokeStyle)
             
             symbol.color = fillColor
             symbol.outline = outline
@@ -86,7 +86,7 @@ extension AGSUniqueValueRenderer {
                   let _ = symbolData["style"] as? Int32 else {
                 return nil
             }
-            symbol.style = getStrokeStyle(type: String(strokeStyle))
+            symbol.style = getStrokeStyle(type: strokeStyle)
             symbol.color = strokeColor
             return symbol
         case "Point":
@@ -116,29 +116,29 @@ extension AGSUniqueValueRenderer {
         
     }
     
-    private func getStrokeStyle(type: String) -> AGSSimpleLineSymbolStyle {
+    private func getStrokeStyle(type: Int32) -> AGSSimpleLineSymbolStyle {
         switch(type){
-        case "dash":
+        case 0:
             return AGSSimpleLineSymbolStyle.dash
-        case "dashDot":
+        case 1:
             return AGSSimpleLineSymbolStyle.dashDot
-        case "dashDotDot":
+        case 2:
             return AGSSimpleLineSymbolStyle.dashDotDot
-        case "dot":
+        case 3:
             return AGSSimpleLineSymbolStyle.dot
-        case "solid":
+        case 4:
             return AGSSimpleLineSymbolStyle.solid
-        case "longDash":
+        case 5:
             return AGSSimpleLineSymbolStyle.longDash
-        case "longDashDot":
+        case 6:
             return AGSSimpleLineSymbolStyle.longDashDot
-        case "shortDash":
+        case 7:
             return AGSSimpleLineSymbolStyle.shortDash
-        case "shortDashDot":
+        case 8:
             return AGSSimpleLineSymbolStyle.shortDashDot
-        case "shortDashDotDot":
+        case 9:
             return AGSSimpleLineSymbolStyle.shortDashDotDot
-        case "shortDot":
+        case 10:
             return AGSSimpleLineSymbolStyle.shortDot
         default:
             return AGSSimpleLineSymbolStyle.null

@@ -92,6 +92,7 @@ class Polyline extends Symbol {
     VoidCallback? onTapParam,
     Color? selectedColorParam,
     SymbolVisibilityFilter? visibilityFilterParam,
+    String? typeParam,
   }) {
     return Polyline(
       polylineId: polylineId,
@@ -106,6 +107,7 @@ class Polyline extends Symbol {
       onTap: onTapParam ?? onTap,
       selectedColor: selectedColorParam ?? selectedColor,
       visibilityFilter: visibilityFilterParam ?? visibilityFilter,
+      type: typeParam ?? type,
     );
   }
 
@@ -137,6 +139,7 @@ class Polyline extends Symbol {
     addIfPresent('antialias', antialias);
     addIfPresent('selectedColor', selectedColor?.value);
     addIfPresent('visibilityFilter', visibilityFilter?.toJson());
+    addIfPresent("type", type);
     return json;
   }
 
@@ -158,7 +161,8 @@ class Polyline extends Symbol {
           zIndex == other.zIndex &&
           antialias == other.antialias &&
           selectedColor == other.selectedColor &&
-          visibilityFilter == other.visibilityFilter;
+          visibilityFilter == other.visibilityFilter &&
+          type == other.type;
 
   Object _pointsToJson() {
     final List<Object> result = <Object>[];
