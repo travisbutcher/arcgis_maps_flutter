@@ -92,11 +92,11 @@ extension AGSUniqueValueRenderer {
         case "Point":
             let symbol = AGSSimpleMarkerSymbol()
             
-            guard let strokeStyle = symbolData["style"] as? Int32,
+            guard let symbolStyle = symbolData["style"] as? Int32,
                   let _ = symbolData["style"] as? Int32 else {
                 return nil
             }
-            symbol.style = getSymbolStyle(type: String(strokeStyle))
+            symbol.style = getSymbolStyle(type: symbolStyle)
             
             guard let strokeColor = UIColor(data: symbolData["color"]),
                   let _ = UIColor(data: symbolData["color"]) else {
@@ -145,19 +145,19 @@ extension AGSUniqueValueRenderer {
         }
     }
     
-    private func getSymbolStyle(type: String) -> AGSSimpleMarkerSymbolStyle {
+    private func getSymbolStyle(type: Int32) -> AGSSimpleMarkerSymbolStyle {
         switch(type){
-        case "circle":
+        case 0:
             return AGSSimpleMarkerSymbolStyle.circle
-        case "cross":
+        case 1:
             return AGSSimpleMarkerSymbolStyle.cross
-        case "diamond":
+        case 2:
             return AGSSimpleMarkerSymbolStyle.diamond
-        case "square":
+        case 3:
             return AGSSimpleMarkerSymbolStyle.square
-        case "triange":
+        case 4:
             return AGSSimpleMarkerSymbolStyle.triangle
-        case "x":
+        case 5:
             return AGSSimpleMarkerSymbolStyle.X
         default:
             return AGSSimpleMarkerSymbolStyle.circle

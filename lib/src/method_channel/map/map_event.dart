@@ -48,6 +48,16 @@ class PolylineTapEvent extends MapEvent<PolylineId> {
   ) : super(mapId, polylineId);
 }
 
+class PointTapEvent extends MapEvent<PointId> {
+  /// Build a PointTap Event triggered from the map represented by `mapId`.
+  ///
+  /// The `value` of this event is a [PointId] object that represents the tapped Polygon.
+  const PointTapEvent(
+    int mapId,
+    PointId pointId,
+  ) : super(mapId, pointId);
+}
+
 class UserLocationTapEvent extends MapEvent<void> {
   const UserLocationTapEvent(int mapId) : super(mapId, null);
 }

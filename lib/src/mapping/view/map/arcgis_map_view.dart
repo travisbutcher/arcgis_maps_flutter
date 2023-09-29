@@ -77,6 +77,7 @@ class ArcgisMapView extends StatefulWidget {
     this.markers = const <Marker>{},
     this.polygons = const <Polygon>{},
     this.polylines = const <Polyline>{},
+    this.points = const <Point>{},
     this.myLocationEnabled = false,
     this.failedToStartMyLocation,
     this.insetsContentInsetFromSafeArea = true,
@@ -141,6 +142,9 @@ class ArcgisMapView extends StatefulWidget {
 
   /// Polylines to be placed on the map.
   final Set<Polyline> polylines;
+
+  /// Points to be placed on the map
+  final Set<Point> points;
 
   final MapLoadedCallback? onMapLoaded;
 
@@ -245,6 +249,7 @@ class _ArcgisMapViewState extends State<ArcgisMapView> {
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
   Map<PolygonId, Polygon> _polygons = <PolygonId, Polygon>{};
   Map<PolylineId, Polyline> _polylines = <PolylineId, Polyline>{};
+  Map<PointId, Point> _points = <PointId, Point>{};
   Set<LayerId> _identifyLayerAsync = <LayerId>{};
 
   late _ArcgisMapOptions _arcgisMapOptions;
@@ -259,6 +264,7 @@ class _ArcgisMapViewState extends State<ArcgisMapView> {
     _markers = keyByMarkerId(widget.markers);
     _polygons = keyByPolygonId(widget.polygons);
     _polylines = keyByPolylineId(widget.polylines);
+    _points = keyByPointId(widget.points);
     _identifyLayerAsync = widget.onIdentifyLayer.keys.toSet();
   }
 
@@ -284,6 +290,7 @@ class _ArcgisMapViewState extends State<ArcgisMapView> {
     _updateMarkers();
     _updatePolygons();
     _updatePolylines();
+    _updatePoints();
     _updateIdentifyLayerListeners();
   }
 
@@ -300,6 +307,7 @@ class _ArcgisMapViewState extends State<ArcgisMapView> {
       markers: widget.markers,
       polygons: widget.polygons,
       polylines: widget.polylines,
+      points: widget.points,
       gestureRecognizers: widget.gestureRecognizers,
       mapOptions: _arcgisMapOptions.toMap(),
     );
@@ -395,6 +403,17 @@ class _ArcgisMapViewState extends State<ArcgisMapView> {
       throw UnknownMapObjectIdError('polyline', polylineId, 'onTap');
     }
     final VoidCallback? onTap = polyline.onTap;
+    if (onTap != null) {
+      onTap();
+    }
+  }
+
+  void onPointTap(PointId pointId) {
+    final Point? point = _points[pointId];
+    if (point == null) {
+      throw UnknownMapObjectIdError('point', pointId, 'onTap');
+    }
+    final VoidCallback? onTap = point.onTap;
     if (onTap != null) {
       onTap();
     }
@@ -525,6 +544,15 @@ class _ArcgisMapViewState extends State<ArcgisMapView> {
     if (polylinesUpdate.isEmpty) return;
     controller._updatePolylines(polylinesUpdate);
     _polylines = keyByPolylineId(widget.polylines);
+  }
+
+  void _updatePoints() async {
+    final ArcgisMapController controller = await _controller.future;
+    final pointsUpdate = 
+        PointUpdates.from(_points.values.toSet(), widget.points);
+    if (pointsUpdate.isEmpty) return;
+    controller._updatePoints(pointsUpdate);
+    _points = keyByPointId(widget.points);
   }
 
   void _updateIdentifyLayerListeners() async {

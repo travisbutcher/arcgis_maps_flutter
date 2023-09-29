@@ -92,7 +92,25 @@ class _MapUniqueValuePageState extends State<MapUniqueValuePage>
       pointId: PointId("UniquePoint1"),
       color: Colors.white,
       style: SimpleMarkerSymbolStyle.circle,
+      size: 5
+    );
+    var pointSymbol2 = const Point(
+      pointId: PointId("UniquePoint2"),
+      color: Colors.black,
+      style: SimpleMarkerSymbolStyle.cross,
       size: 10
+    );
+    var pointSymbol3 = const Point(
+      pointId: PointId("UniquePoint3"),
+      color: Colors.blue,
+      style: SimpleMarkerSymbolStyle.diamond,
+      size: 15
+    );
+    var pointSymbol4 = const Point(
+      pointId: PointId("UniquePoint4"),
+      color: Colors.yellow,
+      style: SimpleMarkerSymbolStyle.square,
+      size: 20
     );
 
     var uniqueValueInfos = [
@@ -115,41 +133,67 @@ class _MapUniqueValuePageState extends State<MapUniqueValuePage>
       //     values: ["PA4"],
       //     description: "description4",
       //     symbol: polygonSymbol4,
-      //     label: 'Key 4'),
-      UniqueValueInfo(
-        values: ["1"], 
-        label: 'L1', 
-        description: 'description5', 
-        symbol: lineSymbol1),
-      UniqueValueInfo(
-        values: ["2"], 
-        label: 'L2', 
-        description: 'description6', 
-        symbol: lineSymbol2),
-      UniqueValueInfo(
-        values: ["3"], 
-        label: 'Key6', 
-        description: 'description7', 
-        symbol: lineSymbol3),
-      UniqueValueInfo(
-        values: ["4"], 
-        label: 'Key7', 
-        description: 'description8', 
-        symbol: lineSymbol4)
+      //     label: 'Key 4')
       // UniqueValueInfo(
-      //     values: ["P4"],
-      //     description: "description4",
-      //     symbol: pointSymbol1,
-      //     label: 'Point')
+      //   values: ["1"], 
+      //   label: 'L1', 
+      //   description: 'description5', 
+      //   symbol: lineSymbol1),
+      // UniqueValueInfo(
+      //   values: ["2"], 
+      //   label: 'L2', 
+      //   description: 'description6', 
+      //   symbol: lineSymbol2),
+      // UniqueValueInfo(
+      //   values: ["3"], 
+      //   label: 'Key6', 
+      //   description: 'description7', 
+      //   symbol: lineSymbol3),
+      // UniqueValueInfo(
+      //   values: ["4"], 
+      //   label: 'Key7', 
+      //   description: 'description8', 
+      //   symbol: lineSymbol4)
+      UniqueValueInfo(
+          values: ["P4"],
+          description: "description4",
+          symbol: pointSymbol1,
+          label: 'Point1'),
+      UniqueValueInfo(
+          values: ["P2"],
+          description: "description2",
+          symbol: pointSymbol2,
+          label: 'Point2'),
+      UniqueValueInfo(
+          values: ["P3"],
+          description: "description3",
+          symbol: pointSymbol3,
+          label: 'Point3'),
+      UniqueValueInfo(
+          values: ["P1"],
+          description: "description1",
+          symbol: pointSymbol4,
+          label: 'Point4')
     ];
     var uniqueValueRenderer = UniqueValueRenderer(
         fieldNames: const ["Attribut"], 
         uniqueValues: uniqueValueInfos,
         type: "UniqueValueRenderer");
 
-    var featureLayer = FeatureLayer.fromUrl(
-        "https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/DFW_App_Testing/FeatureServer/1",
+    // Lines
+    // var featureLayer = FeatureLayer.fromUrl(
+    //     "https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/DFW_App_Testing/FeatureServer/1",
+    //     renderer: uniqueValueRenderer);
+   
+   // Points
+   var featureLayer = FeatureLayer.fromUrl(
+        "https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/DFW_App_Testing/FeatureServer/0",
         renderer: uniqueValueRenderer);
+
+    // Polygons
+    // var featureLayer = FeatureLayer.fromUrl(
+    //     "https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/DFW_App_Testing/FeatureServer/2",
+    //     renderer: uniqueValueRenderer);
 
     var mapView = ArcgisMapView(
       map: map,
