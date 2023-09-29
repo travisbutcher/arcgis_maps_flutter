@@ -36,27 +36,27 @@ class PointController : BaseGraphicController {
     /// Not sure about the implementation of below functions
     /// Commenting out so they don't impede testing
 
-    // func setLeaderOffsetX(leaderOffsetX: CGFloat) {
-    //     graphics.leaderOffsetX = leaderOffsetX
-    // }
+    func setLeaderOffsetX(leaderOffsetX: CGFloat) {
+        pointSymbol.leaderOffsetX = leaderOffsetX
+    }
 
-    // func setLeaderOffsetY(leaderOffsetY: CGFloat) {
-    //     graphics.leaderOffsetY = leaderOffsetY
-    // }
+    func setLeaderOffsetY(leaderOffsetY: CGFloat) {
+        pointSymbol.leaderOffsetY = leaderOffsetY
+    }
 
-    // func setOffsetX(offsetX: CGFloat) {
-    //     graphics.offsetX = offsetX
-    // }
+    func setOffsetX(offsetX: CGFloat) {
+        pointSymbol.offsetX = offsetX
+    }
 
-    // func setOffsetY(offsetY: CGFloat) {
-    //     graphics.offsetY = offsetY
-    // }
+    func setOffsetY(offsetY: CGFloat) {
+        pointSymbol.offsetY = offsetY
+    }
 
-    // func setAngle(angle: Float) {
-    //     graphics.angle = angle
-    // }
+    func setAngle(angle: Float) {
+        pointSymbol.angle = angle
+    }
 
-    // func setAngleAlignment(angleAlignment: AGSSymbolAngleAlignment) {
-    //     graphics.angleAlignment = angleAlignment
-    // }
+    func setAngleAlignment(angleAlignment: AGSSymbolAngleAlignment) {
+        pointSymbol.angleAlignment = angleAlignment
+    }
 }
