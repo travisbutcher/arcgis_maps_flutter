@@ -34,68 +34,166 @@ class _MapUniqueValuePageState extends State<MapUniqueValuePage>
         fillColor: Colors.blue,
         strokeWidth: 5,
         strokeColor: Colors.pink,
-        strokeStyle: SimpleLineSymbolStyle.dash);
+        strokeStyle: SimpleLineSymbolStyle.dash
+      );
+    
     var polygonSymbol2 = const Polygon(
         polygonId: PolygonId('uniqueValueRenderer2'),
         fillColor: Colors.deepOrange,
-        strokeStyle: SimpleLineSymbolStyle.dashDot);
+        strokeWidth: 10,
+        strokeColor: Colors.black12,
+        strokeStyle: SimpleLineSymbolStyle.dashDot
+      );
+    
     var polygonSymbol3 = const Polygon(
-        polygonId: PolygonId('uniqueValueRenderer3'), fillColor: Colors.yellow, strokeStyle: SimpleLineSymbolStyle.solid);
+        polygonId: PolygonId('uniqueValueRenderer3'), 
+        fillColor: Colors.yellow,
+        strokeWidth: 15,
+        strokeColor: Colors.black26, 
+        strokeStyle: SimpleLineSymbolStyle.solid
+      );
+    
+    var polygonSymbol4 = const Polygon(
+        polygonId: PolygonId('uniqueValueRenderer4'),
+        fillColor: Colors.deepPurple,
+        strokeWidth: 20,
+        strokeColor: Colors.red,
+        strokeStyle: SimpleLineSymbolStyle.dashDotDot
+      );
 
     //create couple line symbols
     var lineSymbol1 = const Polyline(
       polylineId: PolylineId('uniqueValueRendererLine1'),
       color: Colors.deepOrange,
       style: SimpleLineSymbolStyle.dash,
-      width: 20
+      width: 2
     );
     var lineSymbol2 = const Polyline(
       polylineId: PolylineId('uniqueValueRendererLine2'),
       color: Colors.red,
       style: SimpleLineSymbolStyle.dashDot,
-      width: 20);
-    
+      width: 4
+    );
+    var lineSymbol3 = const Polyline(
+      polylineId: PolylineId('uniqueValueRendererLine3'),
+      color: Colors.blue,
+      style: SimpleLineSymbolStyle.longDash,
+      width: 6
+    );
+    var lineSymbol4 = const Polyline(
+      polylineId: PolylineId('uniqueValueRendererLine4'),
+      color: Colors.amber,
+      style: SimpleLineSymbolStyle.dot,
+      width: 10
+    );
+
     //create couple point symbols
-    // var pointSymbol1 = const Marker(
-    //   markerId: MarkerId('uniqueValueRendererPoint1'), 
-    //   position: AGSPoint(x: x, y: y), 
-    //   icon: icon);
+    var pointSymbol1 = const Point(
+      pointId: PointId("UniquePoint1"),
+      color: Colors.white,
+      style: SimpleMarkerSymbolStyle.circle,
+      size: 5
+    );
+    var pointSymbol2 = const Point(
+      pointId: PointId("UniquePoint2"),
+      color: Colors.black,
+      style: SimpleMarkerSymbolStyle.cross,
+      size: 10
+    );
+    var pointSymbol3 = const Point(
+      pointId: PointId("UniquePoint3"),
+      color: Colors.blue,
+      style: SimpleMarkerSymbolStyle.diamond,
+      size: 15
+    );
+    var pointSymbol4 = const Point(
+      pointId: PointId("UniquePoint4"),
+      color: Colors.yellow,
+      style: SimpleMarkerSymbolStyle.square,
+      size: 20
+    );
 
     var uniqueValueInfos = [
       // UniqueValueInfo(
-      //     values: [1],
-      //     description: "description",
+      //     values: ["PA1"],
+      //     description: "PolyDesc1",
       //     symbol: polygonSymbol,
-      //     label: 'Key 1'),
+      //     label: 'PL1'),
       // UniqueValueInfo(
-      //     values: [2],
+      //     values: ["PA2"],
       //     description: "description2",
       //     symbol: polygonSymbol2,
       //     label: 'Key 2'),
       // UniqueValueInfo(
-      //     values: [3],
+      //     values: ["PA3"],
       //     description: "description3",
       //     symbol: polygonSymbol3,
       //     label: 'Key 3'),
+      // UniqueValueInfo(
+      //     values: ["PA4"],
+      //     description: "description4",
+      //     symbol: polygonSymbol4,
+      //     label: 'Key 4')
+      // UniqueValueInfo(
+      //   values: ["1"], 
+      //   label: 'L1', 
+      //   description: 'description5', 
+      //   symbol: lineSymbol1),
+      // UniqueValueInfo(
+      //   values: ["2"], 
+      //   label: 'L2', 
+      //   description: 'description6', 
+      //   symbol: lineSymbol2),
+      // UniqueValueInfo(
+      //   values: ["3"], 
+      //   label: 'Key6', 
+      //   description: 'description7', 
+      //   symbol: lineSymbol3),
+      // UniqueValueInfo(
+      //   values: ["4"], 
+      //   label: 'Key7', 
+      //   description: 'description8', 
+      //   symbol: lineSymbol4)
       UniqueValueInfo(
-        values: [1], 
-        label: 'Key4', 
-        description: 'description4', 
-        symbol: lineSymbol1),
+          values: ["P4"],
+          description: "description4",
+          symbol: pointSymbol1,
+          label: 'Point1'),
       UniqueValueInfo(
-        values: [2], 
-        label: 'Key5', 
-        description: 'description5', 
-        symbol: lineSymbol2),
+          values: ["P2"],
+          description: "description2",
+          symbol: pointSymbol2,
+          label: 'Point2'),
+      UniqueValueInfo(
+          values: ["P3"],
+          description: "description3",
+          symbol: pointSymbol3,
+          label: 'Point3'),
+      UniqueValueInfo(
+          values: ["P1"],
+          description: "description1",
+          symbol: pointSymbol4,
+          label: 'Point4')
     ];
     var uniqueValueRenderer = UniqueValueRenderer(
-        fieldNames: const ["UniqueKey"],
+        fieldNames: const ["Attribut"], 
         uniqueValues: uniqueValueInfos,
         type: "UniqueValueRenderer");
 
-    var featureLayer = FeatureLayer.fromUrl(
-        "https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/DFW_App_Testing/FeatureServer/1",
+    // Lines
+    // var featureLayer = FeatureLayer.fromUrl(
+    //     "https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/DFW_App_Testing/FeatureServer/1",
+    //     renderer: uniqueValueRenderer);
+   
+   // Points
+   var featureLayer = FeatureLayer.fromUrl(
+        "https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/DFW_App_Testing/FeatureServer/0",
         renderer: uniqueValueRenderer);
+
+    // Polygons
+    // var featureLayer = FeatureLayer.fromUrl(
+    //     "https://services1.arcgis.com/wQnFk5ouCfPzTlPw/arcgis/rest/services/DFW_App_Testing/FeatureServer/2",
+    //     renderer: uniqueValueRenderer);
 
     var mapView = ArcgisMapView(
       map: map,

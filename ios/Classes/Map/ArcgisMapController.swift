@@ -15,6 +15,7 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
     private let markersController: MarkersController
     private let polygonsController: PolygonsController
     private let polylinesController: PolylinesController
+    private let pointsController: PointsController
 
     private let locationDisplayController: LocationDisplayController
 
@@ -81,9 +82,10 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
         let graphicsOverlay = AGSGraphicsOverlay()
         polygonsController = PolygonsController(methodChannel: channel, graphicsOverlays: graphicsOverlay)
         polylinesController = PolylinesController(methodChannel: channel, graphicsOverlays: graphicsOverlay)
+        pointsController = PointsController(methodChannel: channel, graphicOverlays: graphicsOverlay)
         markersController = MarkersController(methodChannel: channel, graphicsOverlays: graphicsOverlay)
 
-        symbolsControllers = [polygonsController, polylinesController, markersController]
+        symbolsControllers = [polygonsController, polylinesController, markersController, pointsController]
 
         mapView.graphicsOverlays.add(graphicsOverlay)
 
@@ -95,7 +97,7 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
         layersChangedController = LayersChangedController(geoView: mapView, channel: channel, layersController: layersController)
         let locationDisplayChannel = FlutterMethodChannel(name: "plugins.flutter.io/arcgis_maps_\(viewId)_location_display", binaryMessenger: registrar.messenger())
         locationDisplayController = LocationDisplayController(methodChannel: locationDisplayChannel, mapView: mapView)
-        graphicsTouchDelegates = [markersController, polygonsController, polylinesController, locationDisplayController]
+        graphicsTouchDelegates = [markersController, polygonsController, polylinesController, pointsController, locationDisplayController]
 
         super.init()
 
@@ -504,6 +506,20 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
             }
             result(nil)
             break
+        case "points#update":
+            if let pointUpdates = call.arguments as? Dictionary<String, Any> {
+                if let pointsToAdd = pointUpdates["pointsToAdd"] as? [Dictionary<String, Any>] {
+                    pointsController.addPoints(pointsToAdd: pointsToAdd)
+                }
+                if let pointsToChange = pointUpdates["pointsToChange"] as? [Dictionary<String, Any>] {
+                    pointsController.changePoints(pointsToChange: pointsToChange)
+                }
+                if let pointIdsToRemove = pointUpdates["pointIdsToRemove"] as? [String] {
+                    pointsController.removePoints(pointIdsToRemove: pointIdsToRemove)
+                }
+            }
+            result(nil)
+            break
         case "layer#setTimeOffset":
             layersController.setTimeOffset(arguments: call.arguments)
             result(nil)
@@ -795,6 +811,10 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
 
         if let polylinesToAdd = dict["polylinesToAdd"] as? [Dictionary<String, Any>] {
             polylinesController.addPolylines(polylinesToAdd: polylinesToAdd)
+        }
+
+        if let pointsToAdd: [[String : Any]] = dict["pointsToAdd"] as? [Dictionary<String, Any>] {
+            pointsController.addPoints(pointsToAdd: pointsToAdd)
         }
 
         if let options = dict["options"] as? Dictionary<String, Any> {

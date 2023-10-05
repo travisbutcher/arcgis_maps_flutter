@@ -26,6 +26,7 @@ class Polygon extends Symbol {
     this.onTap,
     this.selectedColor,
     this.visibilityFilter,
+    this.type = "Polygon",
   }) : super(symbolId: polygonId);
 
   /// Uniquely identifies a [Polygon].
@@ -71,6 +72,9 @@ class Polygon extends Symbol {
 
   final SymbolVisibilityFilter? visibilityFilter;
 
+  /// Identifies the type of geometry type for this symbol
+  final String type;
+
   /// Creates a new [Polygon] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.
   Polygon copyWith(
@@ -85,6 +89,7 @@ class Polygon extends Symbol {
       VoidCallback? onTapParam,
       Color? selectedColorParam,
       SymbolVisibilityFilter? visibilityFilterParam,
+      String? typeParam,
       }) {
     return Polygon(
       polygonId: polygonId,
@@ -99,6 +104,7 @@ class Polygon extends Symbol {
       zIndex: zIndexParam ?? zIndex,
       selectedColor: selectedColorParam ?? selectedColor,
       visibilityFilter: visibilityFilterParam ?? visibilityFilter,
+      type: typeParam ?? type,
     );
   }
 
@@ -127,6 +133,7 @@ class Polygon extends Symbol {
     addIfPresent('zIndex', zIndex);
     addIfPresent('selectedColor', selectedColor?.value);
     addIfPresent('visibilityFilter', visibilityFilter?.toJson());
+    addIfPresent("type", type);
 
     json['points'] = _pointsToJson();
 
@@ -151,7 +158,8 @@ class Polygon extends Symbol {
           strokeStyle == other.strokeStyle &&
           zIndex == other.zIndex &&
           selectedColor == other.selectedColor &&
-          visibilityFilter == other.visibilityFilter;
+          visibilityFilter == other.visibilityFilter &&
+          type == other.type;
 
   Object _pointsToJson() {
     final List<Object> result = <Object>[];

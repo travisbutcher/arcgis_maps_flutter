@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:arcgis_maps_flutter/src/symbology/marker_updates.dart';
 import 'package:arcgis_maps_flutter/src/symbology/polygon_updates.dart';
 import 'package:arcgis_maps_flutter/src/symbology/polyline_updates.dart';
+import 'package:arcgis_maps_flutter/src/symbology/point_updates.dart';
 import 'package:arcgis_maps_flutter/src/utils/markers.dart';
+import 'package:arcgis_maps_flutter/src/utils/point.dart';
 import 'package:arcgis_maps_flutter/src/utils/polygons.dart';
 import 'package:arcgis_maps_flutter/src/utils/polyline.dart';
 import 'package:flutter/gestures.dart';
@@ -85,6 +87,7 @@ class MethodChannelArcgisMapsFlutter extends ArcgisMapsFlutterPlatform {
     Set<Marker> markers = const <Marker>{},
     Set<Polygon> polygons = const <Polygon>{},
     Set<Polyline> polylines = const <Polyline>{},
+    Set<Point> points = const <Point>{},
     Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
     Map<String, dynamic> mapOptions = const <String, dynamic>{},
   }) {
@@ -97,6 +100,7 @@ class MethodChannelArcgisMapsFlutter extends ArcgisMapsFlutterPlatform {
       'markersToAdd': serializeMarkerSet(markers),
       'polygonsToAdd': serializePolygonSet(polygons),
       'polylinesToAdd': serializePolylineSet(polylines),
+      'pointsToAdd': serializePointSet(points),
     };
 
     if (viewpoint != null) {
@@ -432,6 +436,12 @@ class MethodChannelArcgisMapsFlutter extends ArcgisMapsFlutterPlatform {
   }
 
   @override
+  Future<void> updatePoints(int mapId, PointUpdates pointUpdates) {
+    return channel(mapId)
+        .invokeMethod<void>('points#update', pointUpdates.toJson());
+  }
+
+  @override
   Future<void> setLayerTimeOffset(
       int mapId, LayerId layerId, TimeValue? timeValue) async {
     return channel(mapId).invokeMethod<void>(
@@ -471,6 +481,11 @@ class MethodChannelArcgisMapsFlutter extends ArcgisMapsFlutterPlatform {
   @override
   Stream<PolylineTapEvent> onPolylineTap({required int mapId}) {
     return _events(mapId).whereType<PolylineTapEvent>();
+  }
+
+  @override
+  Stream<PointTapEvent> onPointTap({required int mapId}) {
+    return _events(mapId).whereType<PointTapEvent>();
   }
 
   @override
@@ -560,6 +575,14 @@ class MethodChannelArcgisMapsFlutter extends ArcgisMapsFlutterPlatform {
           PolylineTapEvent(
             mapId,
             PolylineId(call.arguments['polylineId']),
+          ),
+        );
+        break;
+      case 'point#onTap':
+        _mapEventStreamController.add(
+          PointTapEvent(
+            mapId, 
+            PointId(call.arguments['pointId'],)
           ),
         );
         break;

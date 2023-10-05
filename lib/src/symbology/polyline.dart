@@ -1,7 +1,6 @@
 part of arcgis_maps_flutter;
 
-// Add more styles to this enum?
-enum SimpleLineSymbolStyle { dash, dashDot, dashDotDot, dot, none, solid }
+enum SimpleLineSymbolStyle { dash, dashDot, dashDotDot, dot, none, solid, longDash, longDashDot, shortDash, shortDashDot, shortDashDotDot, shortDot }
 
 /// Uniquely identifies a [Polyline] among [ArcgisMapView] polylines.
 ///
@@ -30,6 +29,7 @@ class Polyline extends Symbol {
     this.onTap,
     this.selectedColor,
     this.visibilityFilter,
+    this.type = "Polyline",
   }) : super(symbolId: polylineId);
 
   /// Uniquely identifies a [Polyline].
@@ -75,6 +75,9 @@ class Polyline extends Symbol {
 
   final SymbolVisibilityFilter? visibilityFilter;
 
+  /// Identifies the type of geometry type for this symbol
+  final String type;
+
   /// Creates a new [Polyline] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.
   Polyline copyWith({
@@ -89,6 +92,7 @@ class Polyline extends Symbol {
     VoidCallback? onTapParam,
     Color? selectedColorParam,
     SymbolVisibilityFilter? visibilityFilterParam,
+    String? typeParam,
   }) {
     return Polyline(
       polylineId: polylineId,
@@ -103,6 +107,7 @@ class Polyline extends Symbol {
       onTap: onTapParam ?? onTap,
       selectedColor: selectedColorParam ?? selectedColor,
       visibilityFilter: visibilityFilterParam ?? visibilityFilter,
+      type: typeParam ?? type,
     );
   }
 
@@ -134,6 +139,7 @@ class Polyline extends Symbol {
     addIfPresent('antialias', antialias);
     addIfPresent('selectedColor', selectedColor?.value);
     addIfPresent('visibilityFilter', visibilityFilter?.toJson());
+    addIfPresent("type", type);
     return json;
   }
 
@@ -155,7 +161,8 @@ class Polyline extends Symbol {
           zIndex == other.zIndex &&
           antialias == other.antialias &&
           selectedColor == other.selectedColor &&
-          visibilityFilter == other.visibilityFilter;
+          visibilityFilter == other.visibilityFilter &&
+          type == other.type;
 
   Object _pointsToJson() {
     final List<Object> result = <Object>[];
