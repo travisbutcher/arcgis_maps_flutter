@@ -9,7 +9,7 @@ class PointController : BaseGraphicController {
     private let pointSymbol: AGSSimpleMarkerSymbol
 
     init(pointId: String) {
-        pointSymbol = AGSSimpleMarkerSymbol(style: .cicrle, color: UIColor.black, width: 10)
+        pointSymbol = AGSSimpleMarkerSymbol(style: .circle, color: UIColor.black, size: CGFloat(10))
         super.init(graphics: AGSGraphic(geometry: nil, symbol: pointSymbol, attributes: ["pointId": pointId]))
     }
 
@@ -30,7 +30,7 @@ class PointController : BaseGraphicController {
     }
 
     func setOutline(polyline: AGSSimpleLineSymbol) {
-        graphics.outline = polyline
+        pointSymbol.outline = polyline
     }
 
     /// Not sure about the implementation of below functions

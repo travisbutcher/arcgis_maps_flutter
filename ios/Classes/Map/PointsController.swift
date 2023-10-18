@@ -6,6 +6,7 @@ import Foundation
 import ArcGIS
 
 class PointsController: NSObject, SymbolsController {
+    
     private var pointIdToController = Dictionary<String, PointController>()
 
     private let graphicsOverlays: AGSGraphicsOverlay
@@ -60,7 +61,7 @@ class PointsController: NSObject, SymbolsController {
         updateController(controller: controller, data: data)
 
         if let color = UIColor(data: data["color"]) {
-            controller.setFillColor(fillColor: fillColor)
+            controller.setColor(color: color)
         }
 
         if let size: Double = data["size"] as? Double {

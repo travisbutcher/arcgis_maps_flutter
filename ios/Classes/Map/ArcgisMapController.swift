@@ -82,7 +82,7 @@ public class ArcgisMapController: NSObject, FlutterPlatformView {
         let graphicsOverlay = AGSGraphicsOverlay()
         polygonsController = PolygonsController(methodChannel: channel, graphicsOverlays: graphicsOverlay)
         polylinesController = PolylinesController(methodChannel: channel, graphicsOverlays: graphicsOverlay)
-        pointsController = PointsController(methodChannel: channel, graphicOverlays: graphicsOverlay)
+        pointsController = PointsController(methodChannel: channel, graphicsOverlays: graphicsOverlay)
         markersController = MarkersController(methodChannel: channel, graphicsOverlays: graphicsOverlay)
 
         symbolsControllers = [polygonsController, polylinesController, markersController, pointsController]
