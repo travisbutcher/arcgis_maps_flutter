@@ -1,4 +1,5 @@
 part of arcgis_maps_flutter;
+// scale change notifier
 
 class CompassController extends ChangeNotifier
     implements ViewpointChangedListener {

@@ -136,6 +136,7 @@ class MapLongPressEndEvent extends _PositionedMapEvent<void> {
       }) : super(value: null);
 }
 
+// Modify this
 class ViewpointChangedEvent extends MapEvent<void> {
   const ViewpointChangedEvent(int mapId) : super(mapId, null);
 }

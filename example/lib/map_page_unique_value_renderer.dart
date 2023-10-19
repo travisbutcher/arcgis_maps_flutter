@@ -4,6 +4,8 @@ import 'package:arcgis_maps_flutter/arcgis_maps_flutter.dart';
 import 'package:flutter/material.dart';
 // ignore_for_file: unused_field
 
+// scale change notifier
+
 class MapUniqueValuePage extends StatefulWidget {
   const MapUniqueValuePage({Key? key}) : super(key: key);
 
